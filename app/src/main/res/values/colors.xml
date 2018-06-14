@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
+
+    <color name="nomal">#39aeef</color>
+    <color name="swhite">#e4e3e3</color>
+    <color name="gray">#CDCDCD</color>
+    <color name="theme_text_primary_color">#3a3a3a</color>
+    <color name="theme_text_simple_color">#9e9c9c</color>
+    <color name="translucent">#55000000</color>
+    <color name="black">#000000</color>
+    <color name="nomal_text">#767676</color>
+    <color name="title_text">#928686</color>
+    <color name="white">#ffffffff</color>
+    <color name="fiction_bar_bg">#ff161616</color>
+    <color name="fiction_default_color">#ffe6e3e6</color>
+    <color name="fiction_tabbar_content_color">#ffaaaaaa</color>
+    <color name="text_default_color">#8a8a8a</color>
+    <color name="line">#e0e0e0</color>
+</resources>

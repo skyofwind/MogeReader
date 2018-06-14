@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="1024dp"
+    android:height="1024dp"
+    android:viewportWidth="1024"
+    android:viewportHeight="1024">
+
+    <path
+        android:fillColor="@color/fiction_tabbar_content_color"
+        android:pathData="M288.2 226.4l660.8 0c26.2 0 47.6-21.4 47.6-47.6s-21.4-47.6-47.6-47.6l-660.8
+0c-26.2 0-47.6 21.4-47.6 47.6S262 226.4 288.2 226.4z" />
+    <path
+        android:fillColor="@color/fiction_tabbar_content_color"
+        android:pathData="M130.2 131.2 75 131.2c-26.2 0-47.6 21.4-47.6 47.6s21.4 47.6 47.6 47.6l55.2
+0c26.2 0 47.6-21.4 47.6-47.6S156.2 131.2 130.2 131.2z" />
+    <path
+        android:fillColor="@color/fiction_tabbar_content_color"
+        android:pathData="M949 464.4 288.2 464.4c-26.2 0-47.6 21.4-47.6 47.6l0 0c0 26.2 21.4 47.6 47.6
+47.6l660.8 0c26.2 0 47.6-21.4 47.6-47.6l0 0C996.6 485.8 975.2 464.4 949 464.4z" />
+    <path
+        android:fillColor="@color/fiction_tabbar_content_color"
+        android:pathData="M130.2 464.4 75 464.4c-26.2 0-47.6 21.4-47.6 47.6l0 0c0 26.2 21.4 47.6 47.6
+47.6l55.2 0c26.2 0 47.6-21.4 47.6-47.6l0 0C177.6 485.8 156.2 464.4 130.2 464.4z" />
+    <path
+        android:fillColor="@color/fiction_tabbar_content_color"
+        android:pathData="M949 797.6 288.2 797.6c-26.2 0-47.6 21.4-47.6 47.6l0 0c0 26.2 21.4 47.6 47.6
+47.6l660.8 0c26.2 0 47.6-21.4 47.6-47.6l0 0C996.6 819 975.2 797.6 949 797.6z" />
+    <path
+        android:fillColor="@color/fiction_tabbar_content_color"
+        android:pathData="M130.2 797.6 75 797.6c-26.2 0-47.6 21.4-47.6 47.6l0 0c0 26.2 21.4 47.6 47.6
+47.6l55.2 0c26.2 0 47.6-21.4 47.6-47.6l0 0C177.6 819 156.2 797.6 130.2 797.6z" />
+</vector>

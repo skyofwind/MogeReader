@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">MyReader</string>
+    <string name="xiaoshuo">小说</string>
+    <string name="yuyin">语音</string>
+    <string name="automatic_scan">智能扫描</string>
+    <string name="manual_choose">手动选择</string>
+    <string name="action_seach">搜索</string>
+    <string name="choose_all">全选</string>
+    <string name="dischoose_all">取消全选</string>
+    <string name="in_bookshelf">导入书架</string>
+    <string name="night">夜间</string>
+    <string name="day">白天</string>
+    <string name= "font_set">设置</string>
+    <string name="contents">目录</string>
+    <string name="complete">完成</string>
+    <string name="book_manager">书籍管理</string>
+    <string name="delete">删除</string>
+    <string name="reverse_order">倒序</string>
+    <string name="positive_sequence">正序</string>
+
+    <dimen name="icon_bar_width">22dp</dimen>
+    <dimen name="icon_bar_height">22dp</dimen>
+    <dimen name="bottom_bar_text_size">18sp</dimen>
+    <dimen name="top_bar_text_size">20sp</dimen>
+    <dimen name="bottom_offset_left">20dp</dimen>
+    <dimen name="bottom_offset_right">20dp</dimen>
+    <dimen name="mb_text_size">16sp</dimen>
+</resources>
