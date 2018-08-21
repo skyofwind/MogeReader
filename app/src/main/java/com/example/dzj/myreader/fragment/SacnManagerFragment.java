@@ -18,6 +18,7 @@ import com.example.dzj.myreader.activity.AddXiaoshuoActivity;
 import com.example.dzj.myreader.adpter.FictionListAdapter;
 import com.example.dzj.myreader.modle.TxtFile;
 import com.example.dzj.myreader.utils.FileListUtil;
+import com.example.dzj.myreader.utils.ThreadUtil;
 import com.example.dzj.myreader.view.FunnyView;
 
 import java.io.File;
@@ -38,7 +39,7 @@ public class SacnManagerFragment extends Fragment {
     private static final long WEEK=DAY*7;
     private static final long MONTH=DAY*30;
     private View rootView;
-    //private FunnyView funnyView;
+    private FunnyView funnyView;
     private ExpandableListView listView;
     private FictionListAdapter fictionListAdapter;
     private LinearLayout linearLayout;
@@ -55,7 +56,7 @@ public class SacnManagerFragment extends Fragment {
                     initView();
                     break;
                 case 0x11:
-                    //removeFunnyView();
+                    removeFunnyView();
                     //((AddXiaoshuoActivity)getContext()).setIsfunnyCompleted(true);
                     break;
             }
@@ -67,22 +68,21 @@ public class SacnManagerFragment extends Fragment {
         rootView=inflater.inflate(R.layout.scan_manager,null);
 
         linearLayout=(LinearLayout)rootView.findViewById(R.id.scan_root);
-        //funnyView=(FunnyView)rootView.findViewById(R.id.funny);
-        //funnyView.start();
-        new Thread(new Runnable() {
+        funnyView=(FunnyView)rootView.findViewById(R.id.funny);
+        funnyView.start();
+        ThreadUtil.getInstance().execute(new Runnable() {
             @Override
             public void run() {
                 seachTxt();
                 sort();
                 initDatas();
             }
-        }).start();
-
+        });
         return rootView;
     }
     private void removeFunnyView(){
-        //funnyView.stop();
-        //linearLayout.removeView(funnyView);
+        funnyView.stop();
+        linearLayout.removeView(funnyView);
     }
     private void initView(){
         listView = (ExpandableListView)rootView.findViewById(R.id.expandingListView);

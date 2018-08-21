@@ -1,6 +1,6 @@
 package com.example.dzj.myreader.modle;
 
-public class TxtLine {
+public class TxtLine implements Cloneable{
     private int position;//文章段数
     private int start;//段字符串中的开始位置
     private int end;//结束位置
@@ -33,5 +33,16 @@ public class TxtLine {
 
     public void setEnd(int end) {
         this.end = end;
+    }
+
+    @Override
+    public TxtLine clone()  {
+        TxtLine txtLine = null;
+        try {
+            txtLine = (TxtLine)super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return txtLine;
     }
 }

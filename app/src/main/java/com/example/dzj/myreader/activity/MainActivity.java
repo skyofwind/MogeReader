@@ -20,6 +20,7 @@ import com.example.dzj.myreader.adpter.MyFragmentPagerAdapter;
 import com.example.dzj.myreader.database.FictionDao;
 import com.example.dzj.myreader.fragment.XiaoshuoManagerFragment;
 import com.example.dzj.myreader.fragment.YuyinManagerFragment;
+import com.example.dzj.myreader.utils.ThreadUtil;
 
 import java.util.ArrayList;
 
@@ -47,6 +48,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         SystemUtils.INSTANCE.getSystemDisplay(this);
         initView();
         permission();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(!ThreadUtil.isEmpty()){
+            ThreadUtil.getInstance().destory();
+        }
     }
 
     private void initView(){

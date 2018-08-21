@@ -15,6 +15,11 @@ android {
         multiDexEnabled true
         vectorDrawables.useSupportLibrary = true
     }
+    android.applicationVariants.all {
+        variant -> variant.outputs.all {
+            outputFileName = "MogeReader-${variant.versionName}.apk"
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
@@ -39,6 +44,13 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:25.4.0'
     implementation 'com.android.support:recyclerview-v7:25.4.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // https://mvnrepository.com/artifact/com.google.collections/google-collections
+    implementation group: 'com.google.collections', name: 'google-collections', version: '1.0'
+    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.16'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+
 }
 repositories {
     mavenCentral()

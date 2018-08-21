@@ -29,9 +29,7 @@ public class TextUtil {
 
     private float nomalSize;
 
-    private TextUtil(){
-
-    }
+    private TextUtil(){ }
 
     public static TextUtil getInstance(){
         if(textUtil == null){
@@ -39,66 +37,6 @@ public class TextUtil {
             //init(paint);
         }
         return textUtil;
-    }
-    public void setWidthAndHeight(int width, int height){
-        setMaxWidth(width);
-        setMaxHeight(height);
-    }
-
-    public int getMinNum() {
-        return minNum;
-    }
-
-    public void setMinNum(int minNum) {
-        this.minNum = minNum;
-    }
-
-    public int getMaxNum() {
-        return maxNum;
-    }
-
-    public void setMaxNum(int maxNum) {
-        this.maxNum = maxNum;
-    }
-
-    public int getRows() {
-        return rows;
-    }
-
-    public void setRows(int rows) {
-        this.rows = rows;
-    }
-
-    public int getMaxHeight() {
-        return maxHeight;
-    }
-
-    public void setMaxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
-    }
-
-    public int getMaxWidth() {
-        return maxWidth;
-    }
-
-    public void setMaxWidth(int maxWidth) {
-        this.maxWidth = maxWidth;
-    }
-
-    public float getRowHeight() {
-        return rowHeight;
-    }
-
-    public void setRowHeight(float rowHeight) {
-        this.rowHeight = rowHeight;
-    }
-
-    public TextPaint getTextPaint() {
-        return textPaint;
-    }
-
-    public void setTextPaint(TextPaint textPaint) {
-        this.textPaint = textPaint;
     }
 
     public void init(TextPaint paint){
@@ -121,16 +59,19 @@ public class TextUtil {
     TxtPager pager;
     int myValue = 0;
     public void dealChpter(Chapter chapter){
-        long st = System.currentTimeMillis();
         p = 1;
         c = 0;
         List<Paragraph> paragraphs = chapter.getParagraphs();
         List<TxtPager> pagers = new ArrayList<>();
         boolean isFinish = false;
         pager = new TxtPager();
-        for(int i = 1; i < paragraphs.size(); i++){
+        //log("paragraphs.size() = "+paragraphs.size());
+        int i = 0;
+        if(paragraphs.size() > 1){
+            i = 1;
+        }
+        for(; i < paragraphs.size(); i++){//第一段默认是标题，跳过
             String str = paragraphs.get(i).getStrParagraph();
-            //log(i+" "+str.length());
             if(textPaint.measureText(str) <= maxWidth){
                 if(i == paragraphs.size()-1){
                     isFinish = true;
@@ -148,7 +89,6 @@ public class TextUtil {
                             isFinish = true;
                         }
                     }
-                    //log("第"+i+"段 s="+mStart+", e="+(mStart+myValue));
                     addColumns(pagers, i, mStart, mStart+myValue, isFinish);
                     mStart = mStart+myValue;
                     myValue = 0;
@@ -157,15 +97,16 @@ public class TextUtil {
                     if(i == paragraphs.size()-1){
                         isFinish = true;
                     }
-                    //log("第"+i+"段 s="+mStart+", e="+str.length());
                     addColumns(pagers, i, mStart, str.length(), isFinish);
                 }
                 isFinish = false;
             }
         }
         chapter.setPagers(pagers);
-        log("第"+chapter.getChapterNum()+"章处理完成");
-        System.out.println("dealChapter="+(System.currentTimeMillis()-st));
+        for(int j = 0; j < paragraphs.size(); j++){
+            String temp = paragraphs.get(j).getStrParagraph();
+            //log(j+" : "+temp.length()+" "+temp);
+        }
     }
     private void calCutOffPosition(String str, int start, int end, float lastLength){
         float tLength;
@@ -180,6 +121,8 @@ public class TextUtil {
             }
         }
         tLength = textPaint.measureText(str.substring(start, end));
+        //log("tLength = "+tLength);
+        //log("str = "+str+" lastLength = "+lastLength+" start = "+start+" end = "+end);
         if(tLength == maxWidth){
             myValue = end-start;
             return;
@@ -240,6 +183,67 @@ public class TextUtil {
 
     public static void log(String str){
         Log.d(TAG, str);
+    }
+
+    public void setWidthAndHeight(int width, int height){
+        setMaxWidth(width);
+        setMaxHeight(height);
+    }
+
+    public int getMinNum() {
+        return minNum;
+    }
+
+    public void setMinNum(int minNum) {
+        this.minNum = minNum;
+    }
+
+    public int getMaxNum() {
+        return maxNum;
+    }
+
+    public void setMaxNum(int maxNum) {
+        this.maxNum = maxNum;
+    }
+
+    public int getRows() {
+        return rows;
+    }
+
+    public void setRows(int rows) {
+        this.rows = rows;
+    }
+
+    public int getMaxHeight() {
+        return maxHeight;
+    }
+
+    public void setMaxHeight(int maxHeight) {
+        this.maxHeight = maxHeight;
+    }
+
+    public int getMaxWidth() {
+        return maxWidth;
+    }
+
+    public void setMaxWidth(int maxWidth) {
+        this.maxWidth = maxWidth;
+    }
+
+    public float getRowHeight() {
+        return rowHeight;
+    }
+
+    public void setRowHeight(float rowHeight) {
+        this.rowHeight = rowHeight;
+    }
+
+    public TextPaint getTextPaint() {
+        return textPaint;
+    }
+
+    public void setTextPaint(TextPaint textPaint) {
+        this.textPaint = textPaint;
     }
 
     public String toString(){

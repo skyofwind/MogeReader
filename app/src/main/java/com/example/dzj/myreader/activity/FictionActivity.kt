@@ -11,21 +11,24 @@ import android.os.*
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.*
-import android.widget.PopupWindow
-import android.widget.TextView
+import android.widget.*
 import com.example.dzj.myapplication.utils.SystemUtils
 import com.example.dzj.myreader.R
 import com.example.dzj.myreader.R.id.readView
 import com.example.dzj.myreader.R.id.title
+import com.example.dzj.myreader.adpter.ContentsListAdapter
 import com.example.dzj.myreader.database.FictionChapterDao
 import com.example.dzj.myreader.database.FictionDao
 import com.example.dzj.myreader.modle.Chapter
 import com.example.dzj.myreader.modle.Fiction
 import com.example.dzj.myreader.modle.LineData
 import com.example.dzj.myreader.modle.TxtFile
-import com.example.dzj.myreader.utils.ExecutorsUtil
 import com.example.dzj.myreader.utils.ParseTxt
 import com.example.dzj.myreader.utils.TextUtil
+import com.example.dzj.myreader.utils.ThreadUtil
+import io.reactivex.Observable
+import io.reactivex.ObservableOnSubscribe
+import io.reactivex.Observer
 import kotlinx.android.synthetic.main.fiction_layout.*
 
 class FictionActivity : BaseActivty() {
@@ -37,10 +40,13 @@ class FictionActivity : BaseActivty() {
     private var file : TxtFile? = null
     private var lineDatas : List<LineData>? = null
     private var contentsWindow : PopupWindow? = null
+    private var contentsAdapter : ContentsListAdapter? = null;
+    private var contentsList : ListView? = null
+    private var sequenceText : TextView? = null
+    var fiction : Fiction? = null
 
     companion object {
-        public var fiction : Fiction? = null
-        public val FICTION_CHANGE_BAR = "change_bar"
+        val FICTION_CHANGE_BAR = "change_bar"
     }
     private val handler = object : Handler() {
         override fun handleMessage(message: Message) {
@@ -51,7 +57,7 @@ class FictionActivity : BaseActivty() {
                     log("已经设置好了")
                 }
                 0x02 -> {
-                    statrProgressDialog()
+                    statrProgressDialog("生成目录中，请稍等")
                 }
                 0x03 -> {
                     cancel()
@@ -67,8 +73,8 @@ class FictionActivity : BaseActivty() {
         initListener()
     }
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
         saveProcess()
         unRegister()
     }
@@ -77,33 +83,36 @@ class FictionActivity : BaseActivty() {
         super.onResume()
         register()
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fiction = null
+    }
+
+
+    override fun onBackPressed() {
+        if(top.visibility == View.VISIBLE){
+            changeBar()
+        }else{
+            super.onBackPressed()
+        }
+    }
     private fun init(){
         handler.sendEmptyMessage(0x02)
-        ExecutorsUtil.getInstance().execute(Runnable {
+        ThreadUtil.getInstance().execute(Runnable {
             val id = intent.getIntExtra("Id", 0)
             file = FictionDao.getInstance(this).getTxtFileByID(id)
-
-            if(fiction == null){//fiction空的情况下
-                initFiction()
-            }else{//fiction非空的情况下
-                if(!fiction!!.filePath.equals(file!!.path)){
-                    initFiction()
-                }
-            }
-            log(fiction!!.lineDatas.get(1).toString())
+            initFiction()
+            //log(fiction!!.lineDatas.get(1).toString())
             var chapterNum = file!!.chapter
-            if(chapterNum == 0){
-                chapterNum = 1
-            }
             if(fiction!!.name != null){
                 val title : TextView = findViewById(R.id.title) as TextView
                 title.setText(fiction!!.name.substring(0, fiction!!.name.length-4))
             }
             val chapter = fiction!!.getChapter(chapterNum)
+            readView.setFiction(fiction!!)
             readView.setPageNum(file!!.page)
-            //val chapter2 = Chapter(ParseTxt.getChapter(lineDatas[1].size.toInt(), lineDatas[2].size.toInt(), filePath, parseTxt.charset))
             dealTxt(chapter)
-            //dealTxt(chapter2)
         })
     }
 
@@ -121,12 +130,36 @@ class FictionActivity : BaseActivty() {
         handler.sendEmptyMessage(0x03)
     }
     fun initListener(){
-        top.setOnClickListener(View.OnClickListener {
-            log("top is click")
-        })
-        bottom.setOnClickListener(View.OnClickListener {
-            log("bottom is click")
-        })
+        top.setOnClickListener(clickListener)
+        bottom.setOnClickListener(clickListener)
+        contents.setOnClickListener(clickListener)
+    }
+    val clickListener = View.OnClickListener {
+        when(it.id){
+            R.id.top -> {log("top is click")}
+            R.id.bottom -> {log("bottom is click")}
+            R.id.contents -> {initContentsPopupWindow(it)}
+            R.id.back -> {
+                if(contentsWindow != null){
+                    contentsWindow!!.dismiss()
+                    log("dismiss")
+                }
+            }
+            R.id.sequence->{
+                if(file!!.sequence == 0){
+                    sequenceText!!.setText(R.string.positive_sequence);
+                    file!!.sequence = 1
+                    contentsAdapter!!.sequence = 1
+                }else{
+                    sequenceText!!.setText(R.string.reverse_order);
+                    file!!.sequence = 0
+                    contentsAdapter!!.sequence = 0
+                }
+                contentsAdapter!!.notifyDataSetChanged()
+                contentsList!!.setSelection(0)
+                FictionDao.getInstance(this).updateFiction(file)
+            }
+        }
     }
 
     fun log(msg : String){
@@ -266,7 +299,8 @@ class FictionActivity : BaseActivty() {
     private fun saveProcess(){
         file!!.chapter = readView.getChapterNum()
         file!!.page = readView.getPageNum()
-        ExecutorsUtil.getInstance().execute(Runnable {
+        log("saveProcess = "+file!!.chapter+" "+file!!.page +" "+readView.getChapterNum()+" "+readView.getPageNum())
+        ThreadUtil.getInstance().execute(Runnable {
             FictionDao.getInstance(this).updateFiction(file)
         })
     }
@@ -280,11 +314,16 @@ class FictionActivity : BaseActivty() {
             bottom.visibility = View.GONE
         }
     }
-
+    private var m = 0
     inner class TimeBroadcastReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
             if (intent.action.equals(Intent.ACTION_TIME_TICK)) {
                 readView.setTime(SystemUtils.getTime())
+                if(m >= 2){
+                    m = 0
+                    saveProcess()
+                }
+                m++
             }
             if(intent.action.equals(FICTION_CHANGE_BAR) ){
                 changeBar()
@@ -296,6 +335,7 @@ class FictionActivity : BaseActivty() {
         fiction = Fiction()
         if(file!!.charset == null || file!!.charset.equals("") || file!!.chapterNum == 0){
             val parseTxt = ParseTxt(file!!.path)
+            //lineDatas = ParseTxt.getChapterListByReadLine(file!!.path, parseTxt.charset)
             lineDatas = ParseTxt.getChapterList(file!!.path, parseTxt.charset)
             file!!.charset = parseTxt.charset
             val num = FictionChapterDao.getInstance(this).insertChapters(file!!.id, lineDatas)
@@ -306,10 +346,9 @@ class FictionActivity : BaseActivty() {
                 FictionChapterDao.getInstance(this).deleteChpaters(file!!.id)
             }
             FictionDao.getInstance(this).updateFiction(file)
-
         }else{
-            lineDatas = FictionChapterDao.getInstance(this).linedatas
-            log(" lineDatas.size="+lineDatas!!.size)
+            lineDatas = FictionChapterDao.getInstance(this).getLinedatas(file!!.id)
+            //log(" lineDatas.size="+lineDatas!!.size)
         }
 
         fiction!!.name = file!!.name
@@ -317,24 +356,64 @@ class FictionActivity : BaseActivty() {
         fiction!!.lineDatas = lineDatas
         fiction!!.charset = file!!.charset
         fiction!!.maxChapter = lineDatas!!.size-1
+        fiction!!.sequence = file!!.sequence
+
+        log(fiction!!.toString())
     }
 
+    //初始化章节菜单
     private fun initContentsPopupWindow(view : View){
         if(contentsWindow == null){
-            val inflater = LayoutInflater.from(this)
-            val contentsView = inflater.inflate(R.layout.contents_layout, null)
+            val contentsView = LayoutInflater.from(this).inflate(R.layout.contents_layout, null)
+            contentsList  = contentsView.findViewById(R.id.contents_list) as ListView
+            initContentsLayout(contentsView)
             contentsWindow = PopupWindow(contentsView, SystemUtils.MAX_WIDTH, SystemUtils.MAX_HEIGHT)
             contentsWindow!!.animationStyle = R.style.popup_window_anim
             contentsWindow!!.isFocusable = true
+            contentsWindow!!.setBackgroundDrawable(null);
             contentsWindow!!.isOutsideTouchable = true
             contentsWindow!!.update()
+            contentsList!!.post(Runnable {
+                moveToLastContentsLine()
+            })
         }
         contentsWindow!!.showAtLocation(view, Gravity.CENTER, 0, 0)
+        //moveToLastContentsLine()
+    }
+    //初始化章节菜单adpater
+    private fun initContentsLayout(view : View){
+        log("initContentsAdpater")
+        val back = view.findViewById(R.id.back) as ImageView
+        val sequence = view.findViewById(R.id.sequence) as LinearLayout
+        sequenceText = view.findViewById(R.id.sequence_text) as TextView
+        back.setOnClickListener(clickListener)
+        sequence.setOnClickListener(clickListener)
 
+        contentsAdapter = ContentsListAdapter(this, fiction!!.lineDatas, fiction!!.sequence)
+        contentsList!!.adapter = contentsAdapter
+        contentsList!!.setOnItemClickListener { parent, view, position, id ->
+            val lineData = contentsList!!.getItemAtPosition(position) as LineData
+            contentsWindow!!.dismiss()
+            val l = contentsList!!.getItemAtPosition(position) as LineData
+            dealTxt(fiction!!.getChapter(l.chapterNum))
+            log("chapterNum = "+l.chapterNum)
+            readView.setPageNum(0)
+            changeBar()
+        }
+        if(file!!.sequence == 0){
+            sequenceText!!.setText(R.string.positive_sequence);
+        }else{
+            sequenceText!!.setText(R.string.reverse_order);
+        }
     }
 
-    private fun initContentsAdpater(){
-
+    private fun moveToLastContentsLine(){
+        if(file!!.sequence == 0){
+            contentsList!!.setSelection(file!!.chapter)
+            log(file!!.chapter.toString())
+        }else{
+            contentsList!!.setSelection(contentsAdapter!!.count-file!!.chapter-1)
+            log((contentsAdapter!!.count-file!!.chapter-1).toString())
+        }
     }
-
 }

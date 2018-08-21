@@ -38,7 +38,7 @@ object SystemUtils {
         MAX_WIDTH = dm.widthPixels//屏幕宽度(单位:px)
         MAX_HEIGHT = dm.heightPixels//屏幕高度
 
-        var statusBarHeight1 = -1
+        var statusBarHeight1 : Int = -1
         //获取status_bar_height资源的ID
         val resourceId = context.resources.getIdentifier("status_bar_height", "dimen", "android")
         if (resourceId > 0) {
@@ -81,7 +81,7 @@ object SystemUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return context.getColor(id);
         }else{
-            return context.resources.getColor(id);
+            return context.resources.getColor(id, null);
         }
     }
 

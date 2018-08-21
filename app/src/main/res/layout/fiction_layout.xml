@@ -126,7 +126,7 @@
                 android:layout_marginLeft="@dimen/bottom_offset_left"
                 android:layout_marginRight="@dimen/bottom_offset_right">
                 <ImageView
-                    android:src="@drawable/font_set"
+                    app:srcCompat="@drawable/font_set"
                     android:layout_width="@dimen/icon_bar_width"
                     android:layout_height="@dimen/icon_bar_height" />
                 <TextView

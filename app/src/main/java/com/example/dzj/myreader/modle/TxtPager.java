@@ -1,9 +1,11 @@
 package com.example.dzj.myreader.modle;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class TxtPager {
+public class TxtPager implements Cloneable{
     private List<TxtLine> lines;
 
     public TxtPager(){
@@ -33,4 +35,15 @@ public class TxtPager {
         return lines.get(position);
     }
 
+    @Override
+    public TxtPager clone() {
+        TxtPager txtPager = null;
+        try {
+            txtPager = (TxtPager)super.clone();
+            txtPager.setLines(Lists.newArrayList(lines));
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+        return txtPager;
+    }
 }

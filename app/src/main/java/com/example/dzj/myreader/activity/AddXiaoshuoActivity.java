@@ -1,5 +1,6 @@
 package com.example.dzj.myreader.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
@@ -28,6 +29,7 @@ import com.example.dzj.myreader.fragment.FileManagerFragment;
 import com.example.dzj.myreader.fragment.SacnManagerFragment;
 import com.example.dzj.myreader.modle.TxtFile;
 import com.example.dzj.myreader.utils.ExecutorsUtil;
+import com.example.dzj.myreader.utils.ThreadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,12 +66,13 @@ public class AddXiaoshuoActivity extends BaseActivty implements View.OnClickList
 
     private MyFragmentPagerAdapter adapter;
 
+    @SuppressLint("HandlerLeak")
     private final Handler mHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0x10:
-                    statrProgressDialog();
+                    statrProgressDialog("");
                     break;
                 case 0x11:
                     cancel();
@@ -318,7 +321,7 @@ public class AddXiaoshuoActivity extends BaseActivty implements View.OnClickList
                 if(isAddScan){
                     Log.d("sss","扫描");
                     mHandler.sendEmptyMessage(0x10);
-                    ExecutorsUtil.getInstance().execute(new Runnable() {
+                    ThreadUtil.getInstance().execute(new Runnable() {
                         @Override
                         public void run() {
                             List<TxtFile> files = ((SacnManagerFragment)fragment).getAdd();
@@ -335,7 +338,7 @@ public class AddXiaoshuoActivity extends BaseActivty implements View.OnClickList
                 if (isAddFile){
                     Log.d("sss","选择");
                     mHandler.sendEmptyMessage(0x10);
-                    ExecutorsUtil.getInstance().execute(new Runnable() {
+                    ThreadUtil.getInstance().execute(new Runnable() {
                         @Override
                         public void run() {
                             List<TxtFile> files = ((FileManagerFragment)fragment).getAdd();
@@ -357,11 +360,6 @@ public class AddXiaoshuoActivity extends BaseActivty implements View.OnClickList
         intent.setAction(FictionUpdateReceiver.FICTION_UPDATE);
         sendBroadcast(intent);
     }
-//    private void shuchu(List<TxtFile> files){
-//        for (TxtFile file : files){
-//            Log.d("遍历",file.getName());
-//        }
-//    }
     public void setCouldPutBook(int positon, Boolean b){
         if(positon == 0){
             isAddScan = b;

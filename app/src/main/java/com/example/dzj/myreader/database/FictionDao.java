@@ -19,7 +19,7 @@ public class FictionDao {
     private static final String TAG = "FictionDao";
     private FictionDBHelper fictionDBHelper;
     private Context context;
-    private final String[] FICTION_COLUMNS = new String[] {"Id", "FictionName","FictionPath","Charset", "Chapter", "Page", "chapterNum"};
+    private final String[] FICTION_COLUMNS = new String[] {"Id", "FictionName","FictionPath","Charset", "Chapter", "Page", "chapterNum", "sequence"};
     private static FictionDao fictionDao;
 
     public static FictionDao getInstance(Context context){
@@ -101,6 +101,7 @@ public class FictionDao {
             contentValues.put(FICTION_COLUMNS[4], 0);
             contentValues.put(FICTION_COLUMNS[5], 0);
             contentValues.put(FICTION_COLUMNS[6], 0);
+            contentValues.put(FICTION_COLUMNS[7], 0);
             db.insertOrThrow(FictionDBHelper.TABLE_NAME, null, contentValues);
 
             db.setTransactionSuccessful();
@@ -151,6 +152,7 @@ public class FictionDao {
             contentValues.put(FICTION_COLUMNS[4], file.getChapter());
             contentValues.put(FICTION_COLUMNS[5], file.getPage());
             contentValues.put(FICTION_COLUMNS[6], file.getChapterNum());
+            contentValues.put(FICTION_COLUMNS[7], file.getSequence());
 
             db.update(FictionDBHelper.TABLE_NAME, contentValues,"Id = ?", new String[]{String.valueOf(file.getId())});
             db.setTransactionSuccessful();
@@ -225,6 +227,7 @@ public class FictionDao {
         file.setChapter(cursor.getInt(cursor.getColumnIndex(FICTION_COLUMNS[4])));
         file.setPage(cursor.getInt(cursor.getColumnIndex(FICTION_COLUMNS[5])));
         file.setChapterNum(cursor.getInt(cursor.getColumnIndex(FICTION_COLUMNS[6])));
+        file.setSequence(cursor.getInt(cursor.getColumnIndex(FICTION_COLUMNS[7])));
         return file;
     }
     private void tip(String s){

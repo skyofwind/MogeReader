@@ -24,6 +24,7 @@ import com.example.dzj.myreader.database.FictionDao;
 import com.example.dzj.myreader.modle.TxtFile;
 import com.example.dzj.myreader.utils.BookUtil;
 import com.example.dzj.myreader.utils.ExecutorsUtil;
+import com.example.dzj.myreader.utils.ThreadUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +52,7 @@ public class XiaoshuoManagerAdapter extends BaseAdapter {
         this.isChoose = new ArrayList<>(files.size());
         for(int i = 0; i < files.size(); i++){
             isChoose.add(false);
+            Log.d("XiaoshuoManagerAdapter",files.get(i).getName()+" "+files.get(i).getId());
         }
     }
     @Override
@@ -212,7 +214,7 @@ public class XiaoshuoManagerAdapter extends BaseAdapter {
         }
         for(int i : isDelete){
             final int id = files.get(i).getId();
-            ExecutorsUtil.getInstance().execute(new Runnable() {
+            ThreadUtil.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
                     FictionDao.getInstance(context).deleteFiction(id);

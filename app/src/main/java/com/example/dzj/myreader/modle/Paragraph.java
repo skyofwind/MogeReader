@@ -1,6 +1,6 @@
 package com.example.dzj.myreader.modle;
 
-public class Paragraph {
+public class Paragraph implements Cloneable{
 	private String strParagraph;
 	private int startPage;
 	private int startLine;
@@ -43,5 +43,16 @@ public class Paragraph {
 	}
 	public String toString() {
 		return strParagraph;
+	}
+
+	@Override
+	public Paragraph clone(){
+		Paragraph paragraph = null;
+		try {
+			paragraph = (Paragraph)super.clone();
+		} catch (CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return paragraph;
 	}
 }

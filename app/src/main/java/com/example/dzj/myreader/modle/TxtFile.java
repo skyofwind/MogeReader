@@ -15,6 +15,7 @@ public class TxtFile implements Parcelable{
     private int chapter;
     private int page;
     private int chapterNum;
+    private int sequence;
 
     public TxtFile(){
 
@@ -129,6 +130,14 @@ public class TxtFile implements Parcelable{
 
     public void setChapterNum(int chapterNum) {
         this.chapterNum = chapterNum;
+    }
+
+    public int getSequence() {
+        return sequence;
+    }
+
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
     }
 
     @Override

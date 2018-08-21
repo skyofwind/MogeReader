@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.dzj.myapplication.utils.SystemUtils;
 import com.example.dzj.myreader.R;
 import com.example.dzj.myreader.activity.AddXiaoshuoActivity;
 import com.example.dzj.myreader.activity.MainActivity;
@@ -21,10 +20,8 @@ import com.example.dzj.myreader.adpter.XiaoshuoManagerAdapter;
 import com.example.dzj.myreader.broadcastreceiver.FictionUpdateReceiver;
 import com.example.dzj.myreader.database.FictionDao;
 import com.example.dzj.myreader.modle.TxtFile;
-import com.example.dzj.myreader.utils.ExecutorsUtil;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.List;
 
 /**

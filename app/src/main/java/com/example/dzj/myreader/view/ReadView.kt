@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.*
 import android.os.Build
+import android.os.Handler
+import android.os.Message
 import android.util.AttributeSet
 import android.view.View
 import android.text.TextPaint
@@ -14,8 +16,12 @@ import android.view.MotionEvent
 import com.example.dzj.myapplication.utils.SystemUtils
 import com.example.dzj.myreader.R
 import com.example.dzj.myreader.activity.FictionActivity
+import com.example.dzj.myreader.database.FictionChapterDao
 import com.example.dzj.myreader.modle.Chapter
+import com.example.dzj.myreader.modle.Fiction
+import com.example.dzj.myreader.modle.LineData
 import com.example.dzj.myreader.utils.TextUtil
+import com.example.dzj.myreader.utils.ThreadUtil
 
 import java.nio.charset.Charset
 
@@ -35,6 +41,17 @@ class ReadView : View {
     private var batteryLevel : Int? = null
     private var isCharging : Boolean = false
     private val bottomHeight = 40f
+    private var fiction : Fiction ? = null
+
+    private val handler =  object : Handler(){
+        override fun handleMessage(message: Message) {
+            when(message.what){
+                0x01->{
+                    invalidate()
+                }
+            }
+        }
+    }
 
     constructor(context: Context) : super(context) {
         initPaint()
@@ -179,7 +196,9 @@ class ReadView : View {
     }
 
     fun writeText(canvas: Canvas){
-        log("开始绘制？")
+        if(pagerNum > chapter.pagers.size){
+            pagerNum = 1
+        }
         val txtPager = chapter.pagers.get(pagerNum)
         val lines = txtPager.lines
 
@@ -190,7 +209,7 @@ class ReadView : View {
             val height = TextUtil.getInstance().rowHeight
             val lineSpec =  TextUtil.getInstance().lineSpacing
             if(i == 0){
-                if(chapter.chapterNum == 1){
+                if(chapter.chapterNum == 0){
                     canvas.drawText("前言", this.paddingLeft.toFloat(), height*(i+1)+lineSpec*i+paddingTop, topPaint)
                 }else{
                     canvas.drawText(chapter.paragraphs.get(0).strParagraph, this.paddingLeft.toFloat(), height*(i+1)+lineSpec*i+paddingTop, topPaint)
@@ -204,18 +223,19 @@ class ReadView : View {
     public fun setChapter(chapter: Chapter){
         this.chapter = chapter
         val i = chapter.chapterNum
-        Thread(Runnable {
-            if(i > 1){
-                lastChapter = FictionActivity.fiction!!.getChapter(i-1)
+        log("chapter.chapterNum = "+chapter.chapterNum)
+        ThreadUtil.getInstance().execute(Runnable {
+            if(i > 0){
+                lastChapter = fiction!!.getChapter(i-1)
                 TextUtil.getInstance().dealChpter(lastChapter)
             }
-            if(i < FictionActivity.fiction!!.maxChapter){
-                log("处理next过程中 i="+i)
-                nextChapter = FictionActivity.fiction!!.getChapter(i+1)
+            if(i < fiction!!.maxChapter-1){
+                nextChapter = fiction!!.getChapter(i+1)
                 TextUtil.getInstance().dealChpter(nextChapter)
             }
-        }).start()
-        this.invalidate()
+            handler.sendEmptyMessage(0x01)
+        })
+        setRead(chapter)
     }
     var lastX : Int = 0
     var lastY : Int = 0
@@ -228,13 +248,6 @@ class ReadView : View {
                     lastX = event.rawX.toInt()
                     lastY = event.rawY.toInt()
                 }
-//                MotionEvent.ACTION_MOVE->{
-//                    nowX = event.rawX.toInt()
-//                    nowY = event.rawY.toInt()
-//                    log("move rowX="+lastX+" rowY="+lastY)
-//                    log("move nowX="+nowX+" nowY="+nowY)
-//                    log("move offset="+(lastX-nowX))
-//                }
                 MotionEvent.ACTION_UP->{
                     nowX = event.rawX.toInt()
                     nowY = event.rawY.toInt()
@@ -276,46 +289,52 @@ class ReadView : View {
             pagerNum++
             invalidate()
         }else{
-            if(chapter.chapterNum < FictionActivity.fiction!!.maxChapter){
-                lastChapter = chapter
-                chapter = nextChapter
-                if (chapter.chapterNum != FictionActivity.fiction!!.maxChapter){
-                    Thread(Runnable {
-                        nextChapter = FictionActivity.fiction!!.getChapter(chapter.chapterNum+1)
+            if(chapter.chapterNum < fiction!!.maxChapter-1){
+                lastChapter = chapter.clone()
+                chapter = nextChapter.clone()
+                if (chapter.chapterNum != fiction!!.maxChapter){
+                    ThreadUtil.getInstance().execute(Runnable {
+                        nextChapter = fiction!!.getChapter(chapter.chapterNum+1)
                         TextUtil.getInstance().dealChpter(nextChapter)
-                    }).start()
+                    })
                 }
                 pagerNum = 0
                 invalidate()
+                setRead(chapter)
             }
         }
     }
 
     private fun goLast(){
-        log("lastChapter="+lastChapter.chapterNum)
-        log("chapter="+chapter.chapterNum)
-        log("nextChapter="+nextChapter.chapterNum)
         if(pagerNum > 0){
             pagerNum--
             invalidate()
         }else{
-            if(chapter.chapterNum > 1){
-                nextChapter = chapter
-                chapter = lastChapter
-                if (chapter.chapterNum != 1){
-                    Thread(Runnable {
-                        lastChapter = FictionActivity.fiction!!.getChapter(chapter.chapterNum-1)
+            if(chapter.chapterNum > 0){
+                nextChapter = chapter.clone()
+                chapter = lastChapter.clone()
+                if (chapter.chapterNum > 0){
+                    ThreadUtil.getInstance().execute(Runnable {
+                        lastChapter = fiction!!.getChapter(chapter.chapterNum-1)
                         TextUtil.getInstance().dealChpter(lastChapter)
-                        log("新章节处理"+lastChapter.chapterNum)
-                    }).start()
+                    })
                 }
                 pagerNum = chapter.pagers.size-1
-                log("变化后？")
-                log("lastChapter="+lastChapter.chapterNum)
-                log("chapter="+chapter.chapterNum)
-                log("nextChapter="+nextChapter.chapterNum)
                 invalidate()
+                setRead(chapter)
             }
+        }
+    }
+
+    private fun setRead(chapter : Chapter){
+        log("updateChapter = nmu:"+chapter.chapterNum+" id:"+chapter.id+" isRead:"+chapter.isRead)
+        if(chapter != null && chapter.isRead == 0){
+            chapter.isRead = 1
+            ThreadUtil.getInstance().execute(Runnable {
+                fiction!!.lineDatas.get(chapter.chapterNum).isRead = 1
+                FictionChapterDao.getInstance(context).updateChapter(fiction!!.lineDatas.get(chapter.chapterNum))
+            })
+
         }
     }
 
@@ -337,6 +356,7 @@ class ReadView : View {
     }
 
     public fun getChapterNum() : Int{
+        log("getChapterNum "+chapter.title+" "+chapter.chapterNum+" "+chapter.id)
         return chapter.chapterNum
     }
 
@@ -346,6 +366,10 @@ class ReadView : View {
 
     public fun setPageNum(num : Int){
         this.pagerNum = num
+    }
+
+    public fun setFiction(fiction : Fiction){
+        this.fiction = fiction;
     }
 
     fun log(msg : String){

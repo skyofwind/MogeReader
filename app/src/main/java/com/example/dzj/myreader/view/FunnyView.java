@@ -26,20 +26,20 @@ public class FunnyView extends View {
     private float mHeight;
     private float circle_r;
     private float mcircle_r;
-    private BigDecimal round;
+    private BigDecimal round = new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     private Paint mPaint = new Paint();
-    private int vwidth=0;
-    private int bitmapWidth=0,bitmapHeight=0;
-    private float arotate=0;
-    private float brotate=0;
-    private float trotate=0;
-    private int x1,y1,x2,y2;
-    private boolean isBig=false;
+    private int vwidth = 0;
+    private int bitmapWidth = 0,bitmapHeight = 0;
+    private float arotate = 0;
+    private float brotate = 0;
+    private float trotate = 0;
+    private int x1, y1, x2, y2;
+    private boolean isBig = false;
+    int textType = 0;
 
     public FunnyView(Context context){
         super(context);
         initPaint();
-        round=new BigDecimal(0).setScale(2, BigDecimal.ROUND_HALF_UP);
     }
     public FunnyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -54,16 +54,16 @@ public class FunnyView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         mWidth = w;
         mHeight = h;
-        circle_r= (float) (0.8*w/2);
-        mcircle_r=0;
+        circle_r = (float) (0.8*w/2);
+        mcircle_r = 0;
         vwidth= (int) (circle_r/3);
-        Bitmap funny= getBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.funny),vwidth);
-        bitmapWidth=funny.getWidth();
-        bitmapHeight=funny.getHeight();
-        x1=bitmapWidth/2;
-        y1=bitmapHeight/2;
-        x2=bitmapWidth/2;
-        y2=bitmapHeight/2;
+        Bitmap funny = getBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.funny),vwidth);
+        bitmapWidth = funny.getWidth();
+        bitmapHeight = funny.getHeight();
+        x1 = bitmapWidth/2;
+        y1 = bitmapHeight/2;
+        x2 = bitmapWidth/2;
+        y2 = bitmapHeight/2;
     }
     @Override
     protected void onDraw(Canvas canvas) {
@@ -78,8 +78,8 @@ public class FunnyView extends View {
 
         if(isBig){
             //canvas.restore();
-            Bitmap funny= getBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.funny),vwidth);
-            if(y1<=-circle_r/2+bitmapHeight/2){
+            Bitmap funny = getBitmap(BitmapFactory.decodeResource(getResources(),R.drawable.funny),vwidth);
+            if(y1 <= -circle_r/2 + bitmapHeight/2){
                 canvas.save();
                 canvas.rotate(arotate,0,circle_r/2);
             }
@@ -117,8 +117,8 @@ public class FunnyView extends View {
         Paint.FontMetrics fontMetrics=paint.getFontMetrics();
         //float fontHeight=fontMetrics.descent- fontMetrics.ascent;
 
-        float baseY=round.floatValue()  - fontMetrics.top;
-        canvas.drawText("加载中",0,baseY,paint);
+        float baseY = round.floatValue()  - fontMetrics.top;
+        canvas.drawText("扫描中",0,baseY,paint);
     }
     public void start(){
         drawThread=new DrawThread();
@@ -128,6 +128,7 @@ public class FunnyView extends View {
     public void stop(){
         if(drawThread!=null){
             drawThread.setRunning(false);
+            drawThread.interrupt();
         }
     }
     private Bitmap getBitmap(Bitmap bitmap, int newwidth){
@@ -140,6 +141,14 @@ public class FunnyView extends View {
         return nb;
     }
 
+    private String getText(int type){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("加载中");
+        for (int i = 0; i < type; i++){
+            stringBuilder.append("。");
+        }
+        return stringBuilder.toString();
+    }
 
     private class DrawThread extends Thread{
         // 用来停止线程的标记
@@ -192,6 +201,10 @@ public class FunnyView extends View {
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
+                }
+                textType++;
+                if(textType > 3){
+                    textType = 0;
                 }
                 postInvalidate();
             }
