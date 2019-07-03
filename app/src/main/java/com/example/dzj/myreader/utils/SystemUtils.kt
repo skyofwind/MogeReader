@@ -1,4 +1,4 @@
-package com.example.dzj.myapplication.utils
+package com.example.dzj.myreader.utils
 
 import android.content.Context
 import android.os.Build

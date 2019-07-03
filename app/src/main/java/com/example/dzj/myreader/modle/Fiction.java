@@ -1,8 +1,6 @@
 package com.example.dzj.myreader.modle;
 
-
-
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.example.dzj.myreader.utils.ParseTxt;
 
@@ -16,6 +14,7 @@ public class Fiction {
     private List<LineData> lineDatas;
     private int maxChapter;
     private int sequence;
+    private int hasForeword;
 
     public Fiction(){}
 
@@ -67,11 +66,20 @@ public class Fiction {
         this.sequence = sequence;
     }
 
+    public int getHasForeword() {
+        return hasForeword;
+    }
+
+    public void setHasForeword(int hasForeword) {
+        this.hasForeword = hasForeword;
+    }
+
     public Chapter getChapter(int position) throws IOException {
-        int target = position+1;
+        int target = position + 1;
         if (filePath != null && lineDatas!= null && charset != null){
             Chapter chapter = ParseTxt.getChapter(lineDatas.get(target).getSize(), lineDatas.get(position), filePath, charset);
             chapter.setChapterNum(position);
+
             return chapter;
         }
         return null;

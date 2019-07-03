@@ -35,7 +35,7 @@ public class FictionChapterDao {
         fictionChapterDBHelper = new FictionChapterDBHelper(context);
     }
 
-    public List<LineData> getLinedatas(int fid){
+    public synchronized List<LineData> getLinedatas(int fid){
         log("getLinedatas");
         SQLiteDatabase db = null;
         Cursor cursor = null;
@@ -64,7 +64,7 @@ public class FictionChapterDao {
         return null;
     }
 
-    public int insertChapters(int fid, List<LineData> lineDatas){
+    public synchronized int insertChapters(int fid, List<LineData> lineDatas){
         log("insertChapters");
         int i = 0;
         if (lineDatas != null){
@@ -77,7 +77,7 @@ public class FictionChapterDao {
         return i;
     }
 
-    public boolean insertChapter(int fid, LineData lineData){
+    public synchronized boolean insertChapter(int fid, LineData lineData){
         SQLiteDatabase db = null;
         try {
             db = fictionChapterDBHelper.getWritableDatabase();
@@ -108,7 +108,7 @@ public class FictionChapterDao {
         return false;
     }
 
-    public LineData getLineDataById(int id){
+    public synchronized LineData getLineDataById(int id){
         SQLiteDatabase db = null;
         Cursor cursor = null;
         try {
@@ -130,7 +130,7 @@ public class FictionChapterDao {
         return null;
     }
 
-    public boolean updateChapter(LineData lineData){
+    public synchronized boolean updateChapter(LineData lineData){
         SQLiteDatabase db = null;
         try {
             db = fictionChapterDBHelper.getWritableDatabase();
@@ -159,7 +159,7 @@ public class FictionChapterDao {
         return false;
     }
 
-    public boolean updateChapter(Chapter chapter){
+    public synchronized boolean updateChapter(Chapter chapter){
         SQLiteDatabase db = null;
         try {
             db = fictionChapterDBHelper.getWritableDatabase();
@@ -181,7 +181,7 @@ public class FictionChapterDao {
         return false;
     }
 
-    public boolean deleteChpaters(int fid){
+    public synchronized boolean deleteChpaters(int fid){
         log("deleteChpaters");
         SQLiteDatabase db = null;
         try {
@@ -201,14 +201,14 @@ public class FictionChapterDao {
         return false;
     }
 
-    private void tip(String s){
+    private synchronized void tip(String s){
         Intent intent = new Intent();
         intent.setAction(FictionUpdateReceiver.TOAST_RECEIVER);
         intent.putExtra("toast", s);
         context.sendBroadcast(intent);
     }
 
-    private LineData parseLineData(Cursor cursor){
+    private synchronized LineData parseLineData(Cursor cursor){
         LineData lineData = new LineData();
         lineData.setId(cursor.getInt(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[0])));
         lineData.setLiteNum(cursor.getInt(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[2])));

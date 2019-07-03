@@ -3,6 +3,9 @@ package com.example.dzj.myreader.utils;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * 单例线程池
+ */
 public class ExecutorsUtil {
 
     private static volatile ExecutorsUtil executorsUtil;

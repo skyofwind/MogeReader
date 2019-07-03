@@ -14,16 +14,14 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.dzj.myapplication.utils.SystemUtils;
+import com.example.dzj.myreader.utils.SystemUtils;
 import com.example.dzj.myreader.R;
 import com.example.dzj.myreader.activity.FictionActivity;
 import com.example.dzj.myreader.broadcastreceiver.FictionUpdateReceiver;
-import com.example.dzj.myreader.database.FictionChapterDBHelper;
 import com.example.dzj.myreader.database.FictionChapterDao;
 import com.example.dzj.myreader.database.FictionDao;
 import com.example.dzj.myreader.modle.TxtFile;
 import com.example.dzj.myreader.utils.BookUtil;
-import com.example.dzj.myreader.utils.ExecutorsUtil;
 import com.example.dzj.myreader.utils.ThreadUtil;
 
 import java.util.ArrayList;
@@ -212,7 +210,7 @@ public class XiaoshuoManagerAdapter extends BaseAdapter {
                 isDelete.add(i);
             }
         }
-        for(int i : isDelete){
+        for(int i = isDelete.size() - 1 ; i >= 0; i-- ){
             final int id = files.get(i).getId();
             ThreadUtil.getInstance().execute(new Runnable() {
                 @Override

@@ -3,7 +3,7 @@ package com.example.dzj.myreader.modle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class TxtFile implements Parcelable{
+public class TxtFile implements Parcelable {
     private String name;
     private String path;
     private String size;
@@ -16,16 +16,17 @@ public class TxtFile implements Parcelable{
     private int page;
     private int chapterNum;
     private int sequence;
+    private int hasForeword;
 
-    public TxtFile(){
+    public TxtFile() {
 
     }
 
-    public TxtFile(String name, String path, long lastModified, String size, boolean isDirectory){
-        this.name=name;
-        this.path=path;
-        this.lastModified= lastModified;
-        this.size=size;
+    public TxtFile(String name, String path, long lastModified, String size, boolean isDirectory) {
+        this.name = name;
+        this.path = path;
+        this.lastModified = lastModified;
+        this.size = size;
         this.isDirectory = isDirectory;
     }
 
@@ -39,6 +40,9 @@ public class TxtFile implements Parcelable{
         charset = in.readString();
         chapter = in.readInt();
         page = in.readInt();
+        chapterNum = in.readInt();
+        sequence = in.readInt();
+        hasForeword = in.readInt();
     }
 
     public static final Creator<TxtFile> CREATOR = new Creator<TxtFile>() {
@@ -77,7 +81,7 @@ public class TxtFile implements Parcelable{
         isDirectory = directory;
     }
 
-    public long getLastModified(){
+    public long getLastModified() {
         return this.lastModified;
     }
 
@@ -88,7 +92,8 @@ public class TxtFile implements Parcelable{
     public String getPath() {
         return path;
     }
-    public String getSize(){
+
+    public String getSize() {
         return this.size;
     }
 
@@ -140,6 +145,14 @@ public class TxtFile implements Parcelable{
         this.sequence = sequence;
     }
 
+    public int getHasForeword() {
+        return hasForeword;
+    }
+
+    public void setHasForeword(int hasForeword) {
+        this.hasForeword = hasForeword;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -156,9 +169,19 @@ public class TxtFile implements Parcelable{
         dest.writeString(charset);
         dest.writeInt(chapter);
         dest.writeInt(page);
+        dest.writeInt(chapterNum);
+        dest.writeInt(sequence);
+        dest.writeInt(hasForeword);
     }
 
-    public String toString(){
-        return "name="+name+"\npath="+path+"\ncharset="+charset+"\nchapter="+chapter+"\npage="+page;
+    public String toString() {
+        return "name=" + name
+                + "\npath=" + path
+                + "\ncharset=" + charset
+                + "\nchapter=" + chapter
+                + "\npage=" + page
+                + "\nchapterNum=" + chapterNum
+                + "\nsequence=" + sequence
+                + "\nhasForeword=" + hasForeword;
     }
 }

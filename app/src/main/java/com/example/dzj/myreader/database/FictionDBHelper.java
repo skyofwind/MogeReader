@@ -26,11 +26,12 @@ public class FictionDBHelper extends SQLiteOpenHelper {
      * Page 上次退出阅读时在第几章节的第几页
      * chapterNum
      * sequence 0正序 1倒序
+     * hasForeword 第一个章节标题前是否有内容
      */
     @Override
     public void onCreate(SQLiteDatabase db) {
         log("onCreate(SQLiteDatabase db)");
-        String sql = "create table if not exists " + TABLE_NAME + " (Id integer primary key AUTOINCREMENT, FictionName text, FictionPath text, Charset text, Chapter integer, Page integer, chapterNum integer, sequence integer)";
+        String sql = "create table if not exists " + TABLE_NAME + " (Id integer primary key AUTOINCREMENT, FictionName text, FictionPath text, Charset text, Chapter integer, Page integer, chapterNum integer, sequence integer, hasForeword integer)";
         db.execSQL(sql);
     }
 

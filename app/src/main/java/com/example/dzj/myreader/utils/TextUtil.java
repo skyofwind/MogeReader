@@ -49,7 +49,7 @@ public class TextUtil {
         nomalSize = tWidth;
 
         minNum = (int)(maxWidth/tWidth);
-        tWidth = paint.measureText("a");
+        tWidth = paint.measureText(" ");
         maxNum = (int)(maxWidth/tWidth);
         rows = (int)(maxHeight/(rowHeight+lineSpacing)-1);
     }
@@ -148,7 +148,6 @@ public class TextUtil {
         }else if(tLength < maxWidth){
             calCutOffPosition(str, start, (start+maxNum+end)/2, tLength);
         }
-        return;
     }
     private void addColumns(List<TxtPager> pagers, int position, int start, int end, boolean isFinish){
         TxtLine txtLine = new TxtLine();
