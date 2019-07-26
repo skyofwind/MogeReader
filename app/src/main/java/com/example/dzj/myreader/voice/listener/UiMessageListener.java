@@ -43,7 +43,6 @@ public class UiMessageListener extends MessageListener {
     @Override
     public void onSpeechProgressChanged(String utteranceId, int progress) {
         // sendMessage("onSpeechProgressChanged");
-        Log.d("progress", progress+"");
         mainHandler.sendMessage(mainHandler.obtainMessage(UI_CHANGE_INPUT_TEXT_SELECTION, progress, 0));
     }
 

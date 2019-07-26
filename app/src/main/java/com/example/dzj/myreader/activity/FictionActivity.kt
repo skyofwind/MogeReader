@@ -375,7 +375,7 @@ class FictionActivity : BaseActivty() {
             fiction!!.maxChapter = lineDatas!!.size - 1
             fiction!!.sequence = file!!.sequence
             val chapter = fiction!!.getChapter(0)
-            if (chapter.pagers.size == 0) {
+            if (chapter.paragraphs.size == 0) {
                 file!!.hasForeword = 1
                 fiction!!.hasForeword = 1
             }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -63,6 +64,10 @@ public class OfflineResource {
             model = "bd_etts_common_speech_as_mand_eng_high_am_v3.0.0_20170516.dat";
         } else {
             throw new RuntimeException("voice type is not in list");
+        }
+        File file = new File(destPath + "/" + model);
+        if (file.exists()) {
+            return;
         }
         textFilename = copyAssetsFile(text);
         modelFilename = copyAssetsFile(model);

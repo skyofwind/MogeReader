@@ -271,11 +271,11 @@ class ReadView : View {
                     }
                     //左滑
                     if (offset >= 100) {
-                        goLast()
+                        goNext()
                     }
                     //右滑
                     if (offset <= -100) {
-                        goNext()
+                        goLast()
                     }
 
                 }

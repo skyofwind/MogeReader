@@ -1,30 +1,24 @@
 package com.example.dzj.myreader.adpter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.support.v7.widget.AppCompatCheckBox;
+
+import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.dzj.myreader.R;
 import com.example.dzj.myreader.activity.AddXiaoshuoActivity;
-import com.example.dzj.myreader.fragment.FileManagerFragment;
-import com.example.dzj.myreader.minterface.ChooseAllCheckBox;
 import com.example.dzj.myreader.modle.TxtFile;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by dzj on 2017/8/21.

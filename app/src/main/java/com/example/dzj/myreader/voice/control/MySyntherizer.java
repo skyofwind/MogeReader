@@ -10,8 +10,7 @@ import com.baidu.tts.auth.AuthInfo;
 import com.baidu.tts.client.SpeechSynthesizeBag;
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.TtsMode;
-import com.example.dzj.myreader.voice.MainHandlerConstant;
-
+import com.example.dzj.myreader.voice.constant.MainHandlerConstant;
 
 import java.util.ArrayList;
 import java.util.List;

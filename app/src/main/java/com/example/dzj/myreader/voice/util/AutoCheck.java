@@ -5,11 +5,13 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.content.ContextCompat;
+
+import androidx.core.content.ContextCompat;
 
 import com.baidu.tts.client.SpeechSynthesizer;
 import com.baidu.tts.client.TtsMode;
 import com.example.dzj.myreader.voice.control.InitConfig;
+
 
 import org.json.JSONObject;
 

@@ -3,7 +3,6 @@ package com.example.dzj.myreader.voice.util;
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,7 +57,6 @@ public class FileUtil {
                 while ((size = is.read(buffer, 0, 1024)) >= 0) {
                     fos.write(buffer, 0, size);
                 }
-                Log.d("copyFile",dest+"已完成复制");
             } finally {
                 if (fos != null) {
                     try {

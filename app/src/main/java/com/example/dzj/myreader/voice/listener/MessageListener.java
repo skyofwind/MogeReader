@@ -4,15 +4,19 @@ import android.util.Log;
 
 import com.baidu.tts.client.SpeechError;
 import com.baidu.tts.client.SpeechSynthesizerListener;
-import com.example.dzj.myreader.voice.MainHandlerConstant;
+import com.example.dzj.myreader.minterface.SpeechResultListener;
+import com.example.dzj.myreader.voice.constant.MainHandlerConstant;
+
 
 /**
  * SpeechSynthesizerListener 简单地实现，仅仅记录日志
  * Created by fujiayi on 2017/5/19.
  */
 
-public class MessageListener implements SpeechSynthesizerListener, MainHandlerConstant {
+public class MessageListener implements SpeechSynthesizerListener, MainHandlerConstant, SpeechResultListener {
     private static final String TAG = "MessageListener";
+
+    private boolean isSpeechFinish = true;
 
     /**
      * 播放开始，每句播放开始都会回调
@@ -33,7 +37,7 @@ public class MessageListener implements SpeechSynthesizerListener, MainHandlerCo
      */
     @Override
     public void onSynthesizeDataArrived(String utteranceId, byte[] bytes, int progress) {
-        //  Log.i(TAG, "合成进度回调, progress：" + progress + ";序列号:" + utteranceId );
+          Log.i(TAG, "合成进度回调, progress：" + progress + ";序列号:" + utteranceId );
     }
 
     /**
@@ -48,6 +52,7 @@ public class MessageListener implements SpeechSynthesizerListener, MainHandlerCo
 
     @Override
     public void onSpeechStart(String utteranceId) {
+        isSpeechFinish = false;
         sendMessage("播放开始回调, 序列号:" + utteranceId);
     }
 
@@ -69,6 +74,7 @@ public class MessageListener implements SpeechSynthesizerListener, MainHandlerCo
      */
     @Override
     public void onSpeechFinish(String utteranceId) {
+        isSpeechFinish = true;
         sendMessage("播放结束回调, 序列号:" + utteranceId);
     }
 
@@ -82,6 +88,7 @@ public class MessageListener implements SpeechSynthesizerListener, MainHandlerCo
     public void onError(String utteranceId, SpeechError speechError) {
         sendErrorMessage("错误发生：" + speechError.description + "，错误编码："
                 + speechError.code + "，序列号:" + utteranceId);
+        isSpeechFinish = true;
     }
 
     private void sendErrorMessage(String message) {
@@ -100,5 +107,15 @@ public class MessageListener implements SpeechSynthesizerListener, MainHandlerCo
             Log.i(TAG, message);
         }
 
+    }
+
+    @Override
+    public boolean getSpeechResult() {
+        return isSpeechFinish;
+    }
+
+    @Override
+    public void setSpeechResult(boolean result) {
+        isSpeechFinish = result;
     }
 }

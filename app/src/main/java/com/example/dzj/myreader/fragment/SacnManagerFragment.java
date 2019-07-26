@@ -1,20 +1,17 @@
 package com.example.dzj.myreader.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.util.SparseArray;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.dzj.myreader.R;
-import com.example.dzj.myreader.activity.AddXiaoshuoActivity;
 import com.example.dzj.myreader.adpter.FictionListAdapter;
 import com.example.dzj.myreader.modle.TxtFile;
 import com.example.dzj.myreader.utils.FileListUtil;
@@ -25,9 +22,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by dzj on 2017/8/21.

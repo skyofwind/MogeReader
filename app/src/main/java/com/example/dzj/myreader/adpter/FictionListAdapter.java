@@ -1,9 +1,8 @@
 package com.example.dzj.myreader.adpter;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatCheckBox;
+import androidx.appcompat.widget.AppCompatCheckBox;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
@@ -14,8 +13,6 @@ import android.widget.TextView;
 import com.example.dzj.myreader.R;
 import com.example.dzj.myreader.activity.AddXiaoshuoActivity;
 import com.example.dzj.myreader.modle.TxtFile;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;

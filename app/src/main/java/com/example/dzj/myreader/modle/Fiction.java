@@ -1,9 +1,6 @@
 package com.example.dzj.myreader.modle;
 
-import android.text.TextUtils;
-
 import com.example.dzj.myreader.utils.ParseTxt;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -75,7 +72,13 @@ public class Fiction {
     }
 
     public Chapter getChapter(int position) throws IOException {
-        int target = position + 1;
+        int target = 0;
+        if (lineDatas.size() == 2) {
+            target = 1;
+            position = 0;
+        } else {
+            target = position + 1;
+        }
         if (filePath != null && lineDatas!= null && charset != null){
             Chapter chapter = ParseTxt.getChapter(lineDatas.get(target).getSize(), lineDatas.get(position), filePath, charset);
             chapter.setChapterNum(position);

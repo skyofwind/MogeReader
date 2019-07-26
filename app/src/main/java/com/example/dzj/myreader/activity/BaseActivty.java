@@ -1,7 +1,7 @@
 package com.example.dzj.myreader.activity;
 
 import android.app.Dialog;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.TextView;
 import com.example.dzj.myreader.R;
 /**

@@ -107,7 +107,8 @@ public class ParseTxt {
             code = "UTF-16";
         else if (head[0] == -2 && head[1] == -1)
             code = "Unicode";
-        else if (head[0] == -17 && head[1] == -69 && head[2] == -65)
+        else if ((head[0] == -17 && head[1] == -69 && head[2] == -65)
+                    || (head[0] == -26 && head[1] == -106 && head[2] == -81))
             code = "UTF-8";
 
         inputStream.close();

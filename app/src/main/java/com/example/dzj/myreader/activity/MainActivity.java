@@ -1,12 +1,15 @@
 package com.example.dzj.myreader.activity;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Handler;
+import android.os.Message;
+
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.dzj.myreader.utils.BaiduTTSUtil;
+import com.example.dzj.myreader.utils.PermissionUtil;
 import com.example.dzj.myreader.utils.SystemUtils;
 import com.example.dzj.myreader.R;
 import com.example.dzj.myreader.adpter.MyFragmentPagerAdapter;
@@ -34,7 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     float cursorX = 0;
     private int[] widthArgs;
     private TextView[] btnArgs;
-    private ArrayList<android.support.v4.app.Fragment> fragments;
+    private ArrayList<Fragment> fragments;
     private LinearLayout mTopBar, topBar;
     private TextView complete, chooseAll, number;
     private int chooseType = 0;
@@ -48,6 +53,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         initView();
         permission();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case 0x110:
+
+                    break;
+            }
+        }
+    };
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -185,8 +208,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void permission() {
-
-        if (Build.VERSION.SDK_INT == 23) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            PermissionUtil.Companion.initPermission(this);
+        }
+        /*if (Build.VERSION.SDK_INT == 23) {
             if (!(checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
 
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
@@ -200,7 +225,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE}, 2);
             }
-        }
+        }*/
     }
 
     @Override
@@ -259,4 +284,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ((XiaoshuoManagerFragment) fragments.get(0)).updateAdapterView();
         }
     };
+
+    private void log(String tag, String value) {
+        Log.e(tag, value);
+    }
 }

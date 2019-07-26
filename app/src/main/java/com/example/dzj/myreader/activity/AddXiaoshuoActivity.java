@@ -7,11 +7,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +27,6 @@ import com.example.dzj.myreader.database.FictionDao;
 import com.example.dzj.myreader.fragment.FileManagerFragment;
 import com.example.dzj.myreader.fragment.SacnManagerFragment;
 import com.example.dzj.myreader.modle.TxtFile;
-import com.example.dzj.myreader.utils.ExecutorsUtil;
 import com.example.dzj.myreader.utils.ThreadUtil;
 
 import java.util.ArrayList;
@@ -89,7 +87,7 @@ public class AddXiaoshuoActivity extends BaseActivty implements View.OnClickList
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.add_xiaoshuo);
+        setContentView(R.layout.add_fiction);
 
         initToolbar("导入本地书籍");
         initView();
