@@ -30,10 +30,10 @@ public class ContentsListAdapter extends BaseAdapter {
         this.lineDatas = lineDatas;
         this.sequence = sequence;
         this.hasForeword = hasForeword;
-        if (hasForeword == 1) {
+        if (hasForeword == 1) {//无前言
             num = 2;
             start = 1;
-        } else {
+        } else {//有前言
             num = 1;
             start = 0;
         }
@@ -49,7 +49,12 @@ public class ContentsListAdapter extends BaseAdapter {
         if (sequence == 0) {
             return lineDatas.get(position);
         } else {
-            return lineDatas.get(getCount() - position);
+            int result = result = getCount() - position;
+            if (hasForeword == 0) {
+                result = result - 1;
+            }
+            return lineDatas.get(result);
+
         }
     }
 
@@ -75,12 +80,16 @@ public class ContentsListAdapter extends BaseAdapter {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         int target = position;
-        if (hasForeword == 1) {
-            target += 1;
-        }
 
-        if (sequence == 1) {
+        if (sequence == 1) {//逆序显示
             target = getCount() - position;
+            if (hasForeword == 0) {
+                target -= 1;
+            }
+        } else {//正序显示
+            if (hasForeword == 1) {//无前言情况下target + 1
+                target += 1;
+            }
         }
 
         if (target == start && TextUtils.isEmpty(lineDatas.get(target).getChapterTitle())) {
@@ -89,7 +98,7 @@ public class ContentsListAdapter extends BaseAdapter {
             viewHolder.title.setText(lineDatas.get(target).getChapterTitle());
         }
 
-        if (lineDatas.get(target).getIsRead() == 1) {
+        if (lineDatas.get(target).isRead() == 1) {
             viewHolder.title.setTextColor(getColor(R.color.gray));
         } else {
             viewHolder.title.setTextColor(getColor(R.color.black));

@@ -4,8 +4,6 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MogeReader.iml" filepath="$PROJECT_DIR$/MogeReader.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/my_flutter/.android/Flutter/flutter.iml" filepath="$PROJECT_DIR$/my_flutter/.android/Flutter/flutter.iml" />
-      <module fileurl="file://$PROJECT_DIR$/my_flutter/my_flutter.iml" filepath="$PROJECT_DIR$/my_flutter/my_flutter.iml" />
     </modules>
   </component>
 </project>

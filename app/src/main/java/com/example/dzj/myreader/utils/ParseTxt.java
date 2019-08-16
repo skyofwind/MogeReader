@@ -108,7 +108,8 @@ public class ParseTxt {
         else if (head[0] == -2 && head[1] == -1)
             code = "Unicode";
         else if ((head[0] == -17 && head[1] == -69 && head[2] == -65)
-                    || (head[0] == -26 && head[1] == -106 && head[2] == -81))
+                || (head[0] == -26 && head[1] == -106 && head[2] == -81)
+                || (head[0] == -25 && head[1] == -84 && head[2] == -84))
             code = "UTF-8";
 
         inputStream.close();
@@ -217,7 +218,7 @@ public class ParseTxt {
         Chapter chapter = new Chapter(new String(buf, charset));
         chapter.setId(lineData.getId());
         chapter.setTitle(lineData.getChapterTitle());
-        chapter.setIsRead(lineData.getIsRead());
+        chapter.setRead(lineData.isRead());
         return chapter;
     }
 
@@ -302,14 +303,14 @@ public class ParseTxt {
         List<LineData> list = new ArrayList<>();
         LineRecord record = new LineRecord();
 
-        LineData lineData = new LineData(record.count, record.size, record.length, record.chapterNum);
+        LineData lineData = new LineData(record.getCount(), record.getSize(), record.getLength(), record.getChapterNum());
         list.add(lineData);
 
         BufferedReader bReader = new BufferedReader(new InputStreamReader(new FileInputStream(file), charset));
         String line = "";
         while ((line = bReader.readLine()) != null) {
-            if (record.count == 0) {
-                record.sb.append(line);
+            if (record.getCount() == 0) {
+                record.getSb().append(line);
             }
             if (Pattern.matches(regex[0], line)) {
                 addChapterRecordOfText(record, list, charset, line);
@@ -320,15 +321,15 @@ public class ParseTxt {
             } else if (Pattern.matches(regex[3], line)) {
                 addChapterRecordOfText(record, list, charset, line);
             }
-            if (record.count > 0) {
-                record.sb.append(line);
+            if (record.getCount() > 0) {
+                record.getSb().append(line);
             }
-            record.count++;
-            record.size += 2;
+            record.setCount(record.getCount() + 1);
+            record.setSize(record.getSize() + 2);
 
 
         }
-        if (record.sb.toString() != null) {
+        if (record.getSb().toString() != null) {
             addChapterRecord(record, list, charset, line);
         }
 
@@ -351,17 +352,17 @@ public class ParseTxt {
     }
 
     private static void addChapterRecord(LineRecord record, List<LineData> list, String charset, String line) throws UnsupportedEncodingException {
-        record.chapterNum++;
-        String temp = record.sb.toString();
-        record.size += temp.getBytes(charset).length;
-        record.length += temp.length();
+        record.setChapterNum(record.getChapterNum() + 1);
+        String temp = record.getSb().toString();
+        record.setSize(record.getSize() + temp.getBytes(charset).length);
+        record.setLength(record.getLength() + temp.length());
         if (line != null) {
             Log.e("parseTxt", line);
         }
-        LineData lineData = new LineData(record.count, record.size, record.length, record.chapterNum);
+        LineData lineData = new LineData(record.getCount(), record.getSize(), record.getLength(), record.getChapterNum());
         lineData.setChapterTitle(line);
         list.add(lineData);
-        record.sb = new StringBuilder();
+        record.setSb(new StringBuilder());
 
     }
 

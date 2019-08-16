@@ -142,11 +142,11 @@ public class FictionChapterDao {
             contentValues.put(FICTION_CHAPTER_COLUMNS[4], lineData.getSize());
             contentValues.put(FICTION_CHAPTER_COLUMNS[5], lineData.getLength());
             contentValues.put(FICTION_CHAPTER_COLUMNS[6], lineData.getChapterTitle());
-            contentValues.put(FICTION_CHAPTER_COLUMNS[7], lineData.getIsRead());
+            contentValues.put(FICTION_CHAPTER_COLUMNS[7], lineData.isRead());
 
             db.update(FictionChapterDBHelper.TABLE_NAME, contentValues,"Id = ?", new String[]{String.valueOf(lineData.getId())});
             db.setTransactionSuccessful();
-            log("updateChapter "+lineData.getChapterNum()+" "+lineData.getId()+" "+lineData.getIsRead());
+            log("updateChapter "+lineData.getChapterNum()+" "+lineData.getId()+" "+lineData.isRead());
             return true;
         } catch (Exception e) {
             Log.e(TAG, "", e);
@@ -165,7 +165,7 @@ public class FictionChapterDao {
             db = fictionChapterDBHelper.getWritableDatabase();
             db.beginTransaction();
             ContentValues contentValues = new ContentValues();
-            contentValues.put(FICTION_CHAPTER_COLUMNS[7], chapter.getIsRead());
+            contentValues.put(FICTION_CHAPTER_COLUMNS[7], chapter.isRead());
 
             db.update(FictionChapterDBHelper.TABLE_NAME, contentValues,"Id = ?", new String[]{String.valueOf(chapter.getId())});
             db.setTransactionSuccessful();
@@ -203,7 +203,7 @@ public class FictionChapterDao {
 
     private synchronized void tip(String s){
         Intent intent = new Intent();
-        intent.setAction(FictionUpdateReceiver.TOAST_RECEIVER);
+        intent.setAction(FictionUpdateReceiver.Companion.getTOAST_RECEIVER());
         intent.putExtra("toast", s);
         context.sendBroadcast(intent);
     }
@@ -216,7 +216,7 @@ public class FictionChapterDao {
         lineData.setSize(cursor.getInt(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[4])));
         lineData.setLength(cursor.getInt(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[5])));
         lineData.setChapterTitle(cursor.getString(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[6])));
-        lineData.setIsRead(cursor.getInt(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[7])));
+        lineData.setRead(cursor.getInt(cursor.getColumnIndex(FICTION_CHAPTER_COLUMNS[7])));
 
         return lineData;
     }

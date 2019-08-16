@@ -9,7 +9,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        BuglyUtil.initBugly(getApplicationContext(), true);
+        BuglyUtil.INSTANCE.initBugly(getApplicationContext(), true);
         initBaiduTTS();
     }
 

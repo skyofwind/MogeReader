@@ -11,7 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.dzj.myreader.R;
-import com.example.dzj.myreader.activity.AddXiaoshuoActivity;
+import com.example.dzj.myreader.ui.activity.AddXiaoshuoActivity;
 import com.example.dzj.myreader.modle.TxtFile;
 
 import java.util.ArrayList;

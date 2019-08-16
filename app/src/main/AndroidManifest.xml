@@ -22,15 +22,15 @@
         android:name=".MyApplication"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <uses-library android:name="org.apache.http.legacy" android:required="false"/>
-        <activity android:name=".activity.MainActivity">
+        <activity android:name="com.example.dzj.myreader.ui.activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AddXiaoshuoActivity" />
-        <activity android:name=".activity.FictionActivity" />
+        <activity android:name="com.example.dzj.myreader.ui.activity.AddXiaoshuoActivity" />
+        <activity android:name="com.example.dzj.myreader.ui.activity.FictionActivity" />
     </application>
 
 </manifest>

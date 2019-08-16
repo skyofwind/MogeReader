@@ -1,64 +1,72 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
-        android:id="@+id/bottomlinear"
-        android:layout_width="fill_parent"
-        android:layout_height="54dp"
-        android:orientation="horizontal"
-        android:background="#DCDCDC"
-        android:layout_alignParentTop="true">
-        <TextView
-            android:id="@+id/btn_xiaoshuo"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:text="@string/xiaoshuo"
-            />
-        <TextView
-            android:id="@+id/btn_yuyin"
-            android:layout_width="0dp"
-            android:layout_height="fill_parent"
-            android:layout_weight="1"
-            android:padding="10dp"
-            android:gravity="center"
-            android:textSize="14sp"
-            android:text="@string/yuyin"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:id="@+id/cursorarea"
-        android:layout_width="fill_parent"
-        android:background="#CDCDCD"
-        android:orientation="horizontal"
-        android:layout_height="2dp"
-        android:layout_below="@id/bottomlinear">
-        <ImageView
-            android:id="@+id/cursor_btn"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent">
-        </ImageView>
-    </LinearLayout>
+    <data>
 
+    </data>
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/myviewpager"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/cursorarea"
-        />
-    <include layout="@layout/xiaoshuo_manager_top_bar"
-        android:layout_alignParentTop="true"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:visibility="gone"/>
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/bottomlinear"
+            android:layout_width="fill_parent"
+            android:layout_height="54dp"
+            android:orientation="horizontal"
+            android:background="#DCDCDC"
+            android:layout_alignParentTop="true">
+
+            <TextView
+                android:id="@+id/btn_xiaoshuo"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="@string/xiaoshuo" />
+
+            <TextView
+                android:id="@+id/btn_yuyin"
+                android:layout_width="0dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:padding="10dp"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:text="@string/yuyin" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cursorarea"
+            android:layout_width="fill_parent"
+            android:background="#CDCDCD"
+            android:orientation="horizontal"
+            android:layout_height="2dp"
+            android:layout_below="@id/bottomlinear">
+
+            <ImageView
+                android:id="@+id/cursor_btn"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"/>
+        </LinearLayout>
 
 
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/myviewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/cursorarea" />
 
-</RelativeLayout>
+        <include
+            layout="@layout/xiaoshuo_manager_top_bar"
+            android:layout_alignParentTop="true"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+</layout>

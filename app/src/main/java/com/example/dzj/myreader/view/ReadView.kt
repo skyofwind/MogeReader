@@ -15,7 +15,7 @@ import android.view.MotionEvent
 
 import com.example.dzj.myreader.utils.SystemUtils
 import com.example.dzj.myreader.R
-import com.example.dzj.myreader.activity.FictionActivity
+import com.example.dzj.myreader.ui.activity.FictionActivity
 import com.example.dzj.myreader.database.FictionChapterDao
 import com.example.dzj.myreader.modle.Chapter
 import com.example.dzj.myreader.modle.Fiction
@@ -183,7 +183,7 @@ class ReadView : View {
         }
 
         if (chapter.pagers != null) {
-            val str: String = (pagerNum + 1).toString() + "/" + chapter.pagers.size
+            val str: String = (pagerNum + 1).toString() + "/" + chapter.pagers!!.size
             val pWidth = topPaint.measureText(str)
             val pX = SystemUtils.MAX_WIDTH - paddingRight - pWidth
             canvas.drawText(str, pX, (maxHeight - paddingBottom).toFloat(), topPaint)
@@ -194,14 +194,14 @@ class ReadView : View {
     }
 
     fun writeText(canvas: Canvas) {
-        if (pagerNum > chapter.pagers.size) {
+        if (pagerNum > chapter.pagers!!.size) {
             pagerNum = 1
         }
         val txtPager = chapter.pagers!!.get(pagerNum)
         val lines = txtPager!!.lines
 
         var i = 0
-        while (i < lines!!.size) {
+        while (i < lines.size) {
             val line = lines.get(i)
             val str = chapter.getString(line.position, line.start, line.end)
             val height = TextUtil.getInstance().rowHeight
@@ -210,7 +210,7 @@ class ReadView : View {
                 if (chapter.chapterNum == 0) {
                     canvas.drawText("前言", this.paddingLeft.toFloat(), height * (i + 1) + lineSpec * i + paddingTop, topPaint)
                 } else {
-                    canvas.drawText(chapter.paragraphs.get(0).strParagraph, this.paddingLeft.toFloat(), height * (i + 1) + lineSpec * i + paddingTop, topPaint)
+                    canvas.drawText(chapter.paragraphs!!.get(0).strParagraph, this.paddingLeft.toFloat(), height * (i + 1) + lineSpec * i + paddingTop, topPaint)
                 }
             }
             canvas.drawText(str, this.paddingLeft.toFloat(), height * (i + 2) + lineSpec * (i + 1) + paddingTop, textPaint)
@@ -223,13 +223,13 @@ class ReadView : View {
         this.chapter = chapter
         val i = chapter.chapterNum
         log("chapter.chapterNum = " + chapter.chapterNum)
-        ThreadUtil.getInstance().execute(Runnable {
+        ThreadUtil.getInstance()!!.execute(Runnable {
             if (i > 0) {
-                lastChapter = fiction!!.getChapter(i - 1)
+                lastChapter = fiction!!.getChapter(i - 1)!!
                 TextUtil.getInstance().dealChpter(lastChapter)
             }
             if (i < fiction!!.maxChapter - 1) {
-                nextChapter = fiction!!.getChapter(i + 1)
+                nextChapter = fiction!!.getChapter(i + 1)!!
                 TextUtil.getInstance().dealChpter(nextChapter)
             }
             handler.sendEmptyMessage(0x01)
@@ -285,17 +285,17 @@ class ReadView : View {
     }
 
     private fun goNext() {
-        val max = chapter.pagers.size
+        val max = chapter.pagers!!.size
         if (pagerNum < max - 1) {
             pagerNum++
             invalidate()
         } else {
             if (chapter.chapterNum < fiction!!.maxChapter - 1) {
-                lastChapter = chapter.clone()
-                chapter = nextChapter.clone()
+                lastChapter = chapter.clone() as Chapter
+                chapter = nextChapter.clone() as Chapter
                 if (chapter.chapterNum < fiction!!.maxChapter - 1) {
-                    ThreadUtil.getInstance().execute(Runnable {
-                        nextChapter = fiction!!.getChapter(chapter.chapterNum + 1)
+                    ThreadUtil.getInstance()!!.execute(Runnable {
+                        nextChapter = fiction!!.getChapter(chapter.chapterNum + 1)!!
                         TextUtil.getInstance().dealChpter(nextChapter)
                     })
                 }
@@ -312,15 +312,15 @@ class ReadView : View {
             invalidate()
         } else {
             if (chapter.chapterNum > startNum) {
-                nextChapter = chapter.clone()
-                chapter = lastChapter.clone()
+                nextChapter = chapter.clone() as Chapter
+                chapter = lastChapter.clone() as Chapter
                 if (chapter.chapterNum > startNum) {
-                    ThreadUtil.getInstance().execute(Runnable {
-                        lastChapter = fiction!!.getChapter(chapter.chapterNum - 1)
+                    ThreadUtil.getInstance()!!.execute(Runnable {
+                        lastChapter = fiction!!.getChapter(chapter.chapterNum - 1)!!
                         TextUtil.getInstance().dealChpter(lastChapter)
                     })
                 }
-                pagerNum = chapter.pagers.size - 1
+                pagerNum = chapter.pagers!!.size - 1
                 invalidate()
                 setRead(chapter)
             }
@@ -329,11 +329,11 @@ class ReadView : View {
 
     private fun setRead(chapter: Chapter) {
         log("updateChapter = nmu:" + chapter.chapterNum + " id:" + chapter.id + " isRead:" + chapter.isRead)
-        if (chapter != null && chapter.isRead == 0) {
+        if (chapter.isRead == 0) {
             chapter.isRead = 1
-            ThreadUtil.getInstance().execute(Runnable {
-                fiction!!.lineDatas.get(chapter.chapterNum).isRead = 1
-                FictionChapterDao.getInstance(context).updateChapter(fiction!!.lineDatas.get(chapter.chapterNum))
+            ThreadUtil.getInstance()!!.execute(Runnable {
+                fiction!!.lineDatas!![chapter.chapterNum].isRead = 1
+                FictionChapterDao.getInstance(context).updateChapter(fiction!!.lineDatas!![chapter.chapterNum])
             })
 
         }

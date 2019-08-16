@@ -235,7 +235,7 @@ public class FictionDao {
     }
     private void tip(String s){
         Intent intent = new Intent();
-        intent.setAction(FictionUpdateReceiver.TOAST_RECEIVER);
+        intent.setAction(FictionUpdateReceiver.Companion.getTOAST_RECEIVER());
         intent.putExtra("toast", s);
         context.sendBroadcast(intent);
     }

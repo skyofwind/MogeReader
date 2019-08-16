@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.example.dzj.myreader.utils.SystemUtils;
 import com.example.dzj.myreader.R;
-import com.example.dzj.myreader.activity.FictionActivity;
+import com.example.dzj.myreader.ui.activity.FictionActivity;
 import com.example.dzj.myreader.broadcastreceiver.FictionUpdateReceiver;
 import com.example.dzj.myreader.database.FictionChapterDao;
 import com.example.dzj.myreader.database.FictionDao;
@@ -126,7 +126,7 @@ public class XiaoshuoManagerAdapter extends BaseAdapter {
                             SystemUtils.INSTANCE.setGridClickType(true);
                             isChoose.set(position, true);
                             Intent intent = new Intent();
-                            intent.setAction(FictionUpdateReceiver.GRID_LONG_PRESS);
+                            intent.setAction(FictionUpdateReceiver.Companion.getGRID_LONG_PRESS());
                             context.sendBroadcast(intent);
                             updateView();
                         }
@@ -212,7 +212,7 @@ public class XiaoshuoManagerAdapter extends BaseAdapter {
         }
         for(int i = isDelete.size() - 1 ; i >= 0; i-- ){
             final int id = files.get(i).getId();
-            ThreadUtil.getInstance().execute(new Runnable() {
+            ThreadUtil.Companion.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
                     FictionDao.getInstance(context).deleteFiction(id);
